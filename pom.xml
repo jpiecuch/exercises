@@ -45,6 +45,11 @@
             <version>${vertx.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.englishtown.vertx</groupId>
             <artifactId>vertx-guice</artifactId>
             <version>2.3.1</version>
@@ -81,12 +86,14 @@
                         </goals>
                         <configuration>
                             <transformers>
+                                <!-- Creates MANIFEST file inside fat jar with  -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.vertx.core.Launcher</Main-Class>
                                         <Main-Verticle>${main.verticle}</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
+                                <!-- Aggregates all files into on to avoid overriding -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>
                                 </transformer>
@@ -99,6 +106,7 @@
                 </executions>
             </plugin>
 
+            <!-- Quick ways to run application, just out of curiosity -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
