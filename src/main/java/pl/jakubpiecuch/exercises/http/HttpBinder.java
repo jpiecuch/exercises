@@ -15,5 +15,6 @@ public class HttpBinder extends AbstractModule {
         bind(ExercisesEndpoint.class).to(ExercisesEndpointImpl.class).in(Singleton.class);
         bind(AuthProvider.class).to(BearerAuthProvider.class).in(Singleton.class);
         bind(BearerHandler.class).to(BearerAuthHandlerImpl.class).in(Singleton.class);
+        bind(ExerciseHandler.class).to(ExerciseHandlerImpl.class).in(Singleton.class);
     }
 }

@@ -24,11 +24,16 @@ public class HttpVerticle extends AbstractVerticle {
         httpServer = vertx.createHttpServer(new HttpServerOptions()
                 .setCompressionSupported(true)
                 .setHost(config.getString("host"))
-                .setPort(config.getInteger("port")));
+                .setPort(config.getInteger("port")))
+                .requestHandler(exercisesEndpoint.getRouter()::accept);
 
-        httpServer.requestHandler(exercisesEndpoint.getRouter()::accept)
-                .rxListen()
+        httpServer.rxListen()
                 .subscribe(httpServer -> startFuture.complete(),
                         throwable -> startFuture.fail("Server unable to start"));
+    }
+
+    @Override
+    public void stop() {
+        httpServer.close();
     }
 }
