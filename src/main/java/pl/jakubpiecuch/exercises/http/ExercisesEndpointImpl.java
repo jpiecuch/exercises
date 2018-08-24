@@ -7,7 +7,7 @@ import pl.jakubpiecuch.exercises.http.reactivex.ExerciseHandler;
 import pl.jakubpiecuch.exercises.http.reactivex.auth.BearerHandler;
 
 
-public class ExercisesEndpointImpl implements ExercisesEndpoint {
+public class ExercisesEndpointImpl implements RoutingEndpoint {
 
     private final Vertx vertx;
     private final Router router;

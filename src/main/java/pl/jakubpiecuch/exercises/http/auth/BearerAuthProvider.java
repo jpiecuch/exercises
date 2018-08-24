@@ -1,7 +1,6 @@
 package pl.jakubpiecuch.exercises.http.auth;
 
 import com.google.inject.Inject;
-import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.*;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonObject;
@@ -28,7 +27,7 @@ public class BearerAuthProvider implements AuthProvider {
 
         WebClient.create(vertx).postAbs(config.getJsonObject("oauth2").getString("checkTokenUri"))
                 .putHeader(HttpHeaders.AUTHORIZATION.toString(), getBasicAuth(config))
-                .sendForm(body,res -> {
+                .sendForm(body, res -> {
                     if (res.succeeded()) {
                         resultHandler.handle(Future.succeededFuture(new BearerUser(res.result().bodyAsJsonObject())));
                     } else {
