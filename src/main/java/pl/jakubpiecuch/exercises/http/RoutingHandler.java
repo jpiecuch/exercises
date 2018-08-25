@@ -5,5 +5,5 @@ import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
 @VertxGen
-public interface ExerciseHandler extends Handler<RoutingContext> {
+public interface RoutingHandler extends Handler<RoutingContext> {
 }

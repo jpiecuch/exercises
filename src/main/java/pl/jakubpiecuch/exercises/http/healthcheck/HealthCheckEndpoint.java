@@ -9,23 +9,19 @@ import pl.jakubpiecuch.exercises.http.RoutingEndpoint;
 public class HealthCheckEndpoint implements RoutingEndpoint {
 
     private final Vertx vertx;
-    private final Router router;
 
     @Inject
     public HealthCheckEndpoint(io.vertx.core.Vertx vertx) {
         this.vertx = Vertx.newInstance(vertx);
-        this.router = Router.router(this.vertx);
-
-        router.get("/health").handler(event ->
-            event.response()
-                    .setChunked(true)
-                    .write(new JsonObject().put("status", "OK").encodePrettily())
-                    .end());
     }
 
 
     @Override
-    public Router getRouter() {
-        return this.router;
+    public void init(Router router) {
+        router.get("/health").handler(event ->
+                event.response()
+                        .setChunked(true)
+                        .write(new JsonObject().put("status", "OK").encodePrettily())
+                        .end());
     }
 }

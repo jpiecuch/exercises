@@ -1,12 +1,12 @@
-package pl.jakubpiecuch.exercises.config;
+package pl.jakubpiecuch.exercises.config.storeoptions;
 
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.json.JsonObject;
 
-public class SpringCloudConfigStoreRetriever implements ConfigStoreRetriever {
+public class SpringCloudConfigStoreOptionsProvider implements ConfigStoreOptionsProvider {
 
     @Override
-    public ConfigStoreOptions retrieve() {
+    public ConfigStoreOptions getOptions() {
         return new ConfigStoreOptions()
                 .setType("spring-config-server")
                 .setFormat("yaml")

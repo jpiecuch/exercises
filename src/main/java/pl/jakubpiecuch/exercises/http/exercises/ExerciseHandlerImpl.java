@@ -1,4 +1,4 @@
-package pl.jakubpiecuch.exercises.http;
+package pl.jakubpiecuch.exercises.http.exercises;
 
 import io.reactivex.Single;
 import io.vertx.core.http.HttpHeaders;
@@ -6,8 +6,9 @@ import io.vertx.core.http.impl.MimeMapping;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.web.RoutingContext;
+import pl.jakubpiecuch.exercises.http.RoutingHandler;
 
-public class ExerciseHandlerImpl implements ExerciseHandler {
+public class ExerciseHandlerImpl implements RoutingHandler {
 
     @Override
     public void handle(RoutingContext context) {
