@@ -49,6 +49,7 @@ public class StarterVerticle extends AbstractVerticle {
             });
         } else {
             startFuture.fail("Couldn't obtain configuration");
+            vertx.close();
         }
     }
 

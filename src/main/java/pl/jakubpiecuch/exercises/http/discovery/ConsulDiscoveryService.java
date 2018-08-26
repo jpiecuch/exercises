@@ -5,6 +5,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.consul.CheckOptions;
 import io.vertx.ext.consul.ConsulClient;
+import io.vertx.ext.consul.ConsulClientOptions;
 import io.vertx.ext.consul.ServiceOptions;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +22,7 @@ public class ConsulDiscoveryService implements DiscoveryService {
     @Override
     public void init() {
         JsonObject config = getConfig();
-        ConsulClient.create(vertx).registerService(getServiceOptions(config), res -> {
+        ConsulClient.create(vertx, getConsulClientOptions(config)).registerService(getServiceOptions(config), res -> {
             if (res.succeeded()) {
                 log.info("Service successfully registered in consul");
             } else {
@@ -31,12 +32,12 @@ public class ConsulDiscoveryService implements DiscoveryService {
     }
 
     private JsonObject getConfig() {
-        return vertx.getOrCreateContext().config().getJsonObject("server");
+        return vertx.getOrCreateContext().config();
     }
 
     private ServiceOptions getServiceOptions(JsonObject config) {
-        String host = config.getString("host");
-        Integer port = config.getInteger("port");
+        String host = config.getJsonObject("server").getString("host");
+        Integer port = config.getJsonObject("server").getInteger("port");
         String url = "http://" + host + ":" + port + "/health";
 
         return new ServiceOptions()
@@ -47,5 +48,11 @@ public class ConsulDiscoveryService implements DiscoveryService {
                         .setInterval("10s"))
                 .setAddress(host)
                 .setPort(port);
+    }
+
+    private ConsulClientOptions getConsulClientOptions(JsonObject config) {
+        String host = config.getJsonObject("consul").getString("host");
+        Integer port = config.getJsonObject("consul").getInteger("port");
+        return new ConsulClientOptions().setHost(host).setPort(port);
     }
 }
