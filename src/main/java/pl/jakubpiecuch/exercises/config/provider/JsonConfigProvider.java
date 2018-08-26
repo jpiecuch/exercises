@@ -2,10 +2,12 @@ package pl.jakubpiecuch.exercises.config.provider;
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.json.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.stream.IntStream;
 
+@Slf4j
 public class JsonConfigProvider implements ConfigProvider {
 
     @Override
@@ -48,6 +50,7 @@ public class JsonConfigProvider implements ConfigProvider {
                 }
             });
         });
+        log.debug(result.encodePrettily());
         return result;
     }
 }

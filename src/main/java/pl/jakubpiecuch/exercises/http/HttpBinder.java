@@ -16,10 +16,13 @@ import javax.inject.Singleton;
 
 public class HttpBinder extends AbstractModule {
 
+    public static final String EXERCISE_ENDPOINT = "exerciseEndpoint";
+    public static final String HEALTH_CHECK_ENDPOINT = "healthCheckEndpoint";
+
     @Override
     protected void configure() {
-        bind(RoutingEndpoint.class).annotatedWith(Names.named("exerciseEndpoint")).to(ExercisesEndpointImpl.class).in(Singleton.class);
-        bind(RoutingEndpoint.class).annotatedWith(Names.named("healthCheckEndpoint")).to(HealthCheckEndpoint.class).in(Singleton.class);
+        bind(RoutingEndpoint.class).annotatedWith(Names.named(EXERCISE_ENDPOINT)).to(ExercisesEndpointImpl.class).in(Singleton.class);
+        bind(RoutingEndpoint.class).annotatedWith(Names.named(HEALTH_CHECK_ENDPOINT)).to(HealthCheckEndpoint.class).in(Singleton.class);
         bind(AuthProvider.class).to(BearerAuthProvider.class).in(Singleton.class);
         bind(BearerHandler.class).to(BearerAuthHandlerImpl.class).in(Singleton.class);
         bind(RoutingHandler.class).to(ExerciseHandlerImpl.class).in(Singleton.class);
