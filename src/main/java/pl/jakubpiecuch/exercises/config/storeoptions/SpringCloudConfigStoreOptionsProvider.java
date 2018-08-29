@@ -19,6 +19,7 @@ public class SpringCloudConfigStoreOptionsProvider implements ConfigStoreOptions
                 .setConfig(new JsonObject()
                         .put("url", configServerHost + "/exercises/development")
                         .put("user", "config")
-                        .put("password", "welcome"));
+                        .put("password", "welcome")
+                        .put("timeout", 10000));
     }
 }
