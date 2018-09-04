@@ -17,10 +17,10 @@ public class ConsulDiscoveryService implements DiscoveryService {
     @Inject
     public ConsulDiscoveryService(Vertx vertx) {
         this.vertx = vertx;
+        init();
     }
 
-    @Override
-    public void init() {
+    private void init() {
         JsonObject config = getConfig();
         ConsulClient.create(vertx, getConsulClientOptions(config)).registerService(getServiceOptions(config), res -> {
             if (res.succeeded()) {

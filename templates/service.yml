@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: exercises
+spec:
+  selector:
+    app: exercises
+  ports:
+  - protocol: TCP
+    port: 8086
+    targetPort: 8086

@@ -13,11 +13,14 @@ public class SpringCloudConfigStoreOptionsProvider implements ConfigStoreOptions
     public ConfigStoreOptions getOptions() {
         String configServerHost = Optional.ofNullable(System.getenv("SPRING_CLOUD_CONFIG_URI"))
                 .orElse("http://localhost:8081");
+        String profile = Optional.ofNullable(System.getenv("ACTIVE_PROFILE"))
+                .orElse("development");
+        log.info("Active profile: {}", profile);
         return new ConfigStoreOptions()
                 .setType("spring-config-server")
                 .setFormat("yaml")
                 .setConfig(new JsonObject()
-                        .put("url", configServerHost + "/exercises/development")
+                        .put("url", configServerHost + "/exercises/" + profile)
                         .put("user", "config")
                         .put("password", "welcome")
                         .put("timeout", 10000));

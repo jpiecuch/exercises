@@ -24,16 +24,12 @@ public class HttpVerticle extends AbstractVerticle {
     public static final String PORT = "port";
     public static final String SERVER = "server";
     private final List<RoutingEndpoint> routingEndpoints;
-    private final DiscoveryService discoveryService;
     private HttpServer httpServer;
 
     @Inject
     public HttpVerticle(@Named(EXERCISE_ENDPOINT) RoutingEndpoint exercisesEndpoint,
-                        @Named(HEALTH_CHECK_ENDPOINT) RoutingEndpoint healthCheckEndpoint,
-                        DiscoveryService discoveryService) {
+                        @Named(HEALTH_CHECK_ENDPOINT) RoutingEndpoint healthCheckEndpoint) {
         this.routingEndpoints = Arrays.asList(exercisesEndpoint, healthCheckEndpoint);
-        this.discoveryService = discoveryService;
-
     }
 
     @Override
@@ -53,7 +49,6 @@ public class HttpVerticle extends AbstractVerticle {
                 .requestHandler(router::accept)
                 .rxListen()
                 .subscribe(success -> {
-                    discoveryService.init();
                     startFuture.complete();
                     log.info("HTTP server successfully started, listening on port: {}", config.getInteger(PORT));
                     },

@@ -42,13 +42,14 @@ public class StarterVerticle extends AbstractVerticle {
 
             getMergedObservable(rootConfig)
             .subscribe(onNext -> log.info("Verticle {} successfully started", onNext),
-                    error -> startFuture.fail("Couldn't obtain configuration"),
+                    error -> startFuture.fail(error.getCause()),
                     () -> {
                 startFuture.complete();
                 log.info("Start procedure completed");
             });
         } else {
-            startFuture.fail("Couldn't obtain configuration");
+
+            startFuture.fail(result.cause());
             vertx.close();
         }
     }
