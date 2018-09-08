@@ -9,7 +9,6 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.http.HttpServer;
 import io.vertx.reactivex.ext.web.Router;
 import lombok.extern.slf4j.Slf4j;
-import pl.jakubpiecuch.exercises.http.discovery.DiscoveryService;
 
 import java.util.Arrays;
 import java.util.List;

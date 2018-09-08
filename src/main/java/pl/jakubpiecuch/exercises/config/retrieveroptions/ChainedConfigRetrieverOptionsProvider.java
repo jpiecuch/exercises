@@ -3,7 +3,7 @@ package pl.jakubpiecuch.exercises.config.retrieveroptions;
 import io.vertx.config.ConfigRetrieverOptions;
 import pl.jakubpiecuch.exercises.config.storeoptions.ConfigStoreOptionsProvider;
 import pl.jakubpiecuch.exercises.config.storeoptions.EnvConfigStoreOptionsProvider;
-import pl.jakubpiecuch.exercises.config.storeoptions.SpringCloudConfigStoreOptionsProvider;
+import pl.jakubpiecuch.exercises.config.storeoptions.FileConfigStoreOptionsProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +13,7 @@ public class ChainedConfigRetrieverOptionsProvider implements ConfigRetrieverOpt
     private final List<ConfigStoreOptionsProvider> configStoreOptionsProviders;
 
     public ChainedConfigRetrieverOptionsProvider() {
-        this.configStoreOptionsProviders = Arrays.asList(new SpringCloudConfigStoreOptionsProvider(), new EnvConfigStoreOptionsProvider());
+        this.configStoreOptionsProviders = Arrays.asList(new FileConfigStoreOptionsProvider(), new EnvConfigStoreOptionsProvider());
     }
 
     @Override
