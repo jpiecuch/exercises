@@ -1,6 +1,6 @@
 {
-  "verticles": {
-    "http": {
+  "verticles": [
+    {
       "name": "java-guice:pl.jakubpiecuch.exercises.http.HttpVerticle",
       "options": {
         "config": {
@@ -12,7 +12,7 @@
         }
       }
     },
-    "service": {
+    {
       "name": "java-guice:pl.jakubpiecuch.exercises.service.ServiceVerticle",
       "options": {
         "config": {
@@ -20,5 +20,5 @@
         }
       }
     }
-  }
+  ]
 }
