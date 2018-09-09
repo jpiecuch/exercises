@@ -20,7 +20,7 @@ public class SpringCloudConfigStoreOptionsProvider implements ConfigStoreOptions
                 .setType("spring-config-server")
                 .setFormat("yaml")
                 .setConfig(new JsonObject()
-                        .put("url", configServerHost + "/exercises/" + profile)
+                        .put("url", configServerHost + "/exercises-" + profile + ".json")
                         .put("user", "config")
                         .put("password", "welcome")
                         .put("timeout", 10000));
