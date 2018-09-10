@@ -23,7 +23,6 @@ public class HttpVerticle extends AbstractVerticle {
     public static final String PORT = "port";
     public static final String SERVER = "server";
     private final List<RoutingEndpoint> routingEndpoints;
-    private HttpServer httpServer;
 
     @Inject
     public HttpVerticle(@Named(EXERCISE_ENDPOINT) RoutingEndpoint exercisesEndpoint,
@@ -35,15 +34,15 @@ public class HttpVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) {
         log.info("Deploying HTTP verticle");
         final JsonObject config = getConfig().getJsonObject(SERVER);
-        httpServer = createHttpServer(config);
+        HttpServer httpServer = createHttpServer(config);
         final Router router = Router.router(vertx);
         initRoutes(router);
-        handleAndListen(startFuture, config, router);
+        handleAndListen(httpServer, startFuture, config, router);
 
 
     }
 
-    private void handleAndListen(Future<Void> startFuture, JsonObject config, Router router) {
+    private void handleAndListen(HttpServer httpServer, Future<Void> startFuture, JsonObject config, Router router) {
         httpServer
                 .requestHandler(router::accept)
                 .rxListen()
@@ -67,10 +66,5 @@ public class HttpVerticle extends AbstractVerticle {
 
     private JsonObject getConfig() {
         return vertx.getOrCreateContext().config();
-    }
-
-    @Override
-    public void stop() {
-        httpServer.close();
     }
 }

@@ -1,13 +1,9 @@
 package pl.jakubpiecuch.exercises;
 
 
-import io.reactivex.Observable;
 import io.vertx.config.ConfigRetriever;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.AbstractVerticle;
 import lombok.extern.slf4j.Slf4j;
 import pl.jakubpiecuch.exercises.config.retrieveroptions.ChainedConfigRetrieverOptionsProvider;
 import pl.jakubpiecuch.exercises.config.retrieveroptions.ConfigRetrieverOptionsProvider;
@@ -26,7 +22,7 @@ public class StarterVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) {
-        ConfigRetriever.create(vertx.getDelegate(), configRetrieverOptionsProvider.getOptions())
+        ConfigRetriever.create(vertx, configRetrieverOptionsProvider.getOptions())
                 .getConfig(result -> handle(startFuture, result));
     }
 
@@ -35,12 +31,13 @@ public class StarterVerticle extends AbstractVerticle {
             //expected result is json representation of configuration
             JsonObject config = result.result();
 
-            getMergedObservable(config)
-            .subscribe(onNext -> log.info("Verticle with deployment ID: {} successfully deployed", onNext),
-                    error -> startFuture.fail(error.getCause()),
-                    () -> {
-                startFuture.complete();
-                log.info("Start procedure completed");
+            getMergedObservable(config).setHandler(handler -> {
+               if (handler.succeeded()) {
+                   log.info("Verticles with deployment IDs: {} successfully deployed", handler.result().list());
+                   startFuture.complete();
+               } else {
+                   startFuture.fail(handler.cause());
+               }
             });
         } else {
             startFuture.fail(result.cause());
@@ -49,36 +46,37 @@ public class StarterVerticle extends AbstractVerticle {
     }
 
     /**
-     * Return Observable merged from all Observable representations of verticles to deploy.
+     * Returns CompositeFuture consisting of all Future representations of verticles to deploy.
      * Introduced to allow orchestrate deployment of all verticles in one subscription. it's important
      * as we don't want fail start procedure if deployment of even one verticles failed
      * @param config - contains information for deployment
-     * @return merged observable
+     * @return composite future
      */
-    private Observable<String> getMergedObservable(JsonObject config) {
-        return Observable.merge(getVerticlesToDeploy(config));
+    private CompositeFuture getMergedObservable(JsonObject config) {
+        return CompositeFuture.all(getVerticlesToDeploy(config));
     }
 
     /**
-     * Returns collection of Observable representations for each verticle to deploy
+     * Returns collection of Future representations for each verticle to deployment
      * @param config - contains information for deployment
-     * @return list of observable objects
+     * @return list of Future objects
      */
-    private List<Observable<String>> getVerticlesToDeploy(JsonObject config) {
+    private List<Future> getVerticlesToDeploy(JsonObject config) {
         return config.getJsonArray("verticles")
                 .stream()
-                .map(o -> getVerticleObservable((JsonObject) o))
+                .map(o -> getVerticleObservable((JsonObject) o, Future.future()))
                 .collect(Collectors.toList());
     }
 
     /**
-     * Returns Observable for verticle that needs to be deployed
+     * Returns future representation of verticle deployment
      * @param config - contains information for verticle deployment
-     * @return observable object
+     * @return future object
      */
-    private Observable<String> getVerticleObservable(JsonObject config) {
+    private Future<String> getVerticleObservable(JsonObject config, Future<String> future) {
         String name = config.getString("name");
         JsonObject options = config.getJsonObject("options");
-        return vertx.rxDeployVerticle(name, new DeploymentOptions(options)).toObservable();
+        vertx.deployVerticle(name, new DeploymentOptions(options), future);
+        return future;
     }
 }
