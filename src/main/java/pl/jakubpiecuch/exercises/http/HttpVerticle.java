@@ -9,7 +9,6 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.http.HttpServer;
 import io.vertx.reactivex.ext.web.Router;
 import lombok.extern.slf4j.Slf4j;
-import pl.jakubpiecuch.exercises.http.discovery.DiscoveryService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +23,6 @@ public class HttpVerticle extends AbstractVerticle {
     public static final String PORT = "port";
     public static final String SERVER = "server";
     private final List<RoutingEndpoint> routingEndpoints;
-    private HttpServer httpServer;
 
     @Inject
     public HttpVerticle(@Named(EXERCISE_ENDPOINT) RoutingEndpoint exercisesEndpoint,
@@ -36,23 +34,22 @@ public class HttpVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) {
         log.info("Deploying HTTP verticle");
         final JsonObject config = getConfig().getJsonObject(SERVER);
-        httpServer = createHttpServer(config);
+        HttpServer httpServer = createHttpServer(config);
         final Router router = Router.router(vertx);
         initRoutes(router);
-        handleAndListen(startFuture, config, router);
+        handleAndListen(httpServer, startFuture, config, router);
 
 
     }
 
-    private void handleAndListen(Future<Void> startFuture, JsonObject config, Router router) {
+    private void handleAndListen(HttpServer httpServer, Future<Void> startFuture, JsonObject config, Router router) {
         httpServer
                 .requestHandler(router::accept)
                 .rxListen()
                 .subscribe(success -> {
                     startFuture.complete();
                     log.info("HTTP server successfully started, listening on port: {}", config.getInteger(PORT));
-                    },
-                        error -> startFuture.fail("Server unable to start"));
+                    }, error -> startFuture.fail("Server unable to start"));
     }
 
     private HttpServer createHttpServer(JsonObject config) {
@@ -68,10 +65,5 @@ public class HttpVerticle extends AbstractVerticle {
 
     private JsonObject getConfig() {
         return vertx.getOrCreateContext().config();
-    }
-
-    @Override
-    public void stop() {
-        httpServer.close();
     }
 }
