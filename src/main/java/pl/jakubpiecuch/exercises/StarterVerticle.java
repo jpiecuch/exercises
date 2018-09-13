@@ -36,10 +36,12 @@ public class StarterVerticle extends AbstractVerticle {
                    log.info("Verticles with deployment IDs: {} successfully deployed", handler.result().list());
                    startFuture.complete();
                } else {
+                   log.error("Couldn't deploy: {}", handler.cause().getMessage());
                    startFuture.fail(handler.cause());
                }
             });
         } else {
+            log.error("Couldn't obtain config: {}", result.cause().getMessage());
             startFuture.fail(result.cause());
             vertx.close();
         }
@@ -62,9 +64,9 @@ public class StarterVerticle extends AbstractVerticle {
      * @return list of Future objects
      */
     private List<Future> getVerticlesToDeploy(JsonObject config) {
-        return config.getJsonArray("verticles")
+        return config.getJsonObject("verticles")
                 .stream()
-                .map(o -> getVerticleObservable((JsonObject) o, Future.future()))
+                .map(o -> getVerticleObservable((JsonObject) o.getValue(), Future.future()))
                 .collect(Collectors.toList());
     }
 

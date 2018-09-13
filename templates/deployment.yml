@@ -18,6 +18,9 @@ spec:
       - name: exercises
         image: jpiecuch/exercises:1.0
         imagePullPolicy: Always
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
         ports:
         - containerPort: 8086
         env:
@@ -25,3 +28,12 @@ spec:
             value: http://config-service:8081
           - name: ACTIVE_PROFILE
             value: k8s
+          - name: VERTX_CONFIG_PATH
+            value: /etc/config/application.json
+      volumes:
+        - name: config-volume
+          configMap:
+            name: exercises-config
+            items:
+              - key: application.json
+                path: application.json
