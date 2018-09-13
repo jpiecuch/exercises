@@ -1,21 +1,8 @@
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
-  name: exercises-config
+  name: exercises-secrets
   labels:
     app: exercises
 data:
-  application.json: |
-    {
-       "verticles":{
-          "http":{
-             "options":{
-                "config":{
-                   "oauth2":{
-                      "clientSecret":"0564f7a2-05df-4cf9-bb85-bd4058283553"
-                   }
-                }
-             }
-          }
-       }
-    }
+  application.json: eyJ2ZXJ0aWNsZXMiOnsiaHR0cCI6ewogICAgICAgICAgICAgIm9wdGlvbnMiOnsKICAgICAgICAgICAgICAgICJjb25maWciOnsKICAgICAgICAgICAgICAgICAgICJvYXV0aDIiOnsKICAgICAgICAgICAgICAgICAgICAgICJjbGllbnRTZWNyZXQiOiIwNTY0ZjdhMi0wNWRmLTRjZjktYmI4NS1iZDQwNTgyODM1NTMiCiAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICB9CiAgICAgICAgICB9CiAgICAgICB9CiAgICB9

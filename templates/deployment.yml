@@ -32,8 +32,8 @@ spec:
             value: /etc/config/application.json
       volumes:
         - name: config-volume
-          configMap:
-            name: exercises-config
+          secret:
+            secretName: exercises-secrets
             items:
               - key: application.json
                 path: application.json
