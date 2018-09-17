@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: exercises
-        image: jpiecuch/exercises:1.0
+        image: jpiecuch/exercises:latest
         imagePullPolicy: Always
         volumeMounts:
         - name: config-volume
