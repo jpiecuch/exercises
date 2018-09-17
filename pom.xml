@@ -141,7 +141,6 @@
                 <version>1.4.4</version>
                 <configuration>
                     <repository>jpiecuch/exercises</repository>
-                    <tag>${project.version}</tag>
                 </configuration>
             </plugin>
         </plugins>
