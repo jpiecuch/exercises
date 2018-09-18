@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: exercises
-        image: jpiecuch/exercises:latest
+        image: jpiecuch/exercises:${COMMIT_ID}
         imagePullPolicy: Always
         volumeMounts:
         - name: config-volume
