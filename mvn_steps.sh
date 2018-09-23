@@ -4,7 +4,7 @@ step=$1
 commit=$2
 docker_user=$3
 docker_password=$4
-modules=(web)
+modules=(exercises)
 
 build() {
     ./mvnw clean package
