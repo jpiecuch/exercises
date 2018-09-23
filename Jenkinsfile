@@ -44,7 +44,7 @@ pipeline {
                         remote.password = password
                     }
 
-                    sh 'envsubst < templates/deployment.yml.template > exercises/templates/deployment.yml'
+                    sh 'envsubst < templates/deployment.yml.template > templates/deployment.yml'
                     sshPut remote: remote, from: 'templates', into: 'exercises'
 
                     sshScript remote: remote, script: "deploy/${params.Orchestrator}.sh"
